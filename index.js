@@ -21,6 +21,18 @@ function navigate(page, callback, addToHistory = true) {
         if (page !== "register") {
           pageName.textContent = page.charAt(0).toUpperCase() + page.slice(1);
         }
+        if (page === "account"){
+          const avatarImg = document.getElementById("accountAvatar");
+          const avatarName = document.querySelector(".accountName");
+          const savedAvatar = localStorage.getItem("accountAvatar");
+          if (savedAvatar) {
+          avatarImg.src = savedAvatar;
+          }
+          const savedName = localStorage.getItem("username");
+          if (savedName) {
+          avatarName.textContent = savedName;
+          }
+        }
         if (callback) callback();
       })
       .catch(err => {
@@ -39,6 +51,7 @@ document.body.addEventListener("click", e => {
     const page = e.target.closest("a").dataset.page;
     navigate(page);
   }
+  
 });
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -55,17 +68,15 @@ window.addEventListener("popstate", e => {
 let player;
 let enemy;
 const enemies = [
-  { name: "Spider", attackZones: 1, defenseZones: 2, health: 150, damage: 15, critChance: 0.1, critMultiplier: 1.5, img: "assets/avatars/Spider.png" },
-  { name: "Snow Troll", attackZones: 1, defenseZones: 2, health: 150, damage: 20, critChance: 0.2, critMultiplier: 1.5, img: "assets/avatars/SnowTroll.png" },
-  { name: "Orc", attackZones: 1, defenseZones: 2, health: 150, damage: 18, critChance: 0.15, critMultiplier: 1.4, img: "assets/avatars/Orc.png" }
+  { name: "Spider", attackZones: 1, defenseZones: 2, health: 150, damage: 15, critChance: 0.1, critMultiplier: 1.5, img: "assets/rivals/rival1.jpg" },
+  { name: "Troll", attackZones: 1, defenseZones: 2, health: 150, damage: 20, critChance: 0.2, critMultiplier: 1.5, img: "assets/rivals/rival2.jpg" },
+  { name: "Dragon", attackZones: 1, defenseZones: 2, health: 150, damage: 18, critChance: 0.15, critMultiplier: 1.4, img: "assets/rivals/rival3.jpg" }
 ];
 function showEnemy() {
   const enemyNameSpan = content.querySelector(".rival-name");
-  const enemyImg = content.querySelector(".avatar-wrapper img");
+  const enemyImg = content.querySelector(".rival-img");
   const enemyHealthBar = content.querySelector(".rival-health-progress");
   const enemyHealthText = content.querySelector(".rival-health-progress-span");
-
-  if (!enemyNameSpan || !enemyImg || !enemyHealthBar) return;
 
   enemyNameSpan.textContent = enemy.name;
   enemyImg.src = enemy.img;
@@ -79,9 +90,13 @@ function showEnemy() {
 function resetPlayerHealth() {
   const playerHealthBar = content.querySelector(".player-health-progress");
   const playerHealthText = content.querySelector(".player-health-progress-span");
+  const playerImg = content.querySelector(".player-img");
+  const playerNameSpan = content.querySelector(".player-name");
 
   if (!playerHealthBar) return;
 
+  playerNameSpan.textContent = player.name;
+  playerImg.src = player.img;
   playerHealthBar.max = 150;
   playerHealthBar.value = player.health;
   playerHealthText.textContent = `${player.health}/150`;
@@ -89,7 +104,7 @@ function resetPlayerHealth() {
 //ДЛЯ КНОПКИ FIGHT
 content.addEventListener("click", e => {
   if (e.target.classList.contains("fight-button")) {
-    player = { name: "Player", health: 150, damage: 20, critChance: 0.2, critMultiplier: 1.5 };
+    player = { name: localStorage.getItem("username") || "Player", health: 150, damage: 20, critChance: 0.2, critMultiplier: 1.5, img: localStorage.getItem("accountAvatar") || "assets/avatars/default.jpg"};
     enemy = enemies[Math.floor(Math.random() * enemies.length)];
       navigate("battle", () => showEnemy());
   }
@@ -101,7 +116,7 @@ function checkSelections() {
     const attackRadios = document.querySelectorAll(".attack-zones .radio-input");
     const defenseRadios = document.querySelectorAll(".dafence-zones .radio-input");
 
-    if (!attackButton) return; // страница боя еще не загружена
+    if (!attackButton) return; // 
 
     const attackSelected = Array.from(attackRadios).some(r => r.checked);
     const defenseSelected = Array.from(defenseRadios).filter(r => r.checked).length;
@@ -210,5 +225,62 @@ content.addEventListener("click", e => {
       }
   }
 });
+
+//ВКЛАДКА АККАУНТ
+content.addEventListener("click", (e) => {
+  const modal = document.getElementById("avatarModal");
+  const avatarImg = document.getElementById("accountAvatar");
+  const avatarOptions = document.querySelectorAll(".avatar-options img");
+
+  if (e.target.id === "changeAvatarBtn") {
+    modal.style.display = "flex";
+  }
+
+  if (e.target.classList.contains("close-btn") || e.target === modal) {
+    modal.style.display = "none";
+
+  }
+
+  if (e.target.classList.contains("avatar-option")) {
+    updateAvatar(e.target.src);
+    modal.style.display = "none";
+  }
+
+  avatarOptions.forEach(option => {
+  option.addEventListener("click", () => {
+    const selected = option.src;
+    avatarImg.src = selected;
+    localStorage.setItem("accountAvatar", selected);
+    modal.style.display = "none";
+    });
+  });
+
+});
+
+//ВКЛАДКА НАСТРОЙКИ
+content.addEventListener("click", (e) => {
+  const inputPlayerName = document.getElementById("input-name-player");
+  const editButton = document.getElementById("edit-button");
+  const saveButton = document.getElementById("saved-button");
+  if (e.target.id === "edit-button") {
+    inputPlayerName.style.display = "flex";
+    editButton.style.display = "none";
+    saveButton.style.display = "flex";
+  }
+  if(e.target.id === "saved-button"){
+    inputPlayerName.style.display = "none";
+    saveButton.style.display = "none";
+    editButton.style.display = "flex";
+    let name = inputPlayerName.value;
+    if (!name) {
+    alert("Введите имя!");
+    return;
+    }
+    localStorage.setItem("username", name);
+  }
+});
+
+
+
 
 

@@ -144,6 +144,9 @@ p {
     width: 100%;
     height: 3rem;
 }
+.player-img{
+    height: 35rem;
+}
 .battle-info{
     font-size: 1.7rem;
     display: flex;
@@ -201,4 +204,71 @@ p {
     font-size: 1.5rem;
     padding: 0.7rem;
     width: 8rem;
+}
+
+/* Вкладка аккаунт */
+.accountName{
+    font-weight: 300;
+    font-size: 2rem;
+    height: auto;
+    margin-bottom: 2rem;
+}
+#accountAvatar{
+    height: 30rem;
+}
+.account-info{
+    display: flex;
+    gap: 2rem;
+    margin-top: 2rem;
+    margin-left: 2rem;
+}
+.account-changes{
+    height: auto;
+}
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0; 
+    top: 0;
+    width: 100%; 
+    height: 100%;
+    background: rgba(0,0,0,0.5);
+    justify-content: center;
+    align-items: center;
+    }
+.modal-content {
+    background: #fff;
+    padding: 2rem;
+    border-radius: 10px;
+    text-align: center;
+    width: 700px;
+}
+.close-btn {
+    float: right;
+    font-size: 2rem;
+    cursor: pointer;
+}
+.avatar-options {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin: 1rem 0;
+}
+.avatar-option {
+    width: 200px;
+    height: 200px;
+    cursor: pointer;
+    transition: transform 0.2s, border 0.2s;
+    object-fit: cover;
+    border: 2px solid transparent;
+}
+.avatar-option:hover {
+    transform: scale(1.1);
+    border: 2px solid #000;
+}
+
+/* Вкладка настройки */
+#input-name-player, #saved-button{
+    display: none;
 }
