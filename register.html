@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <div class="register">
+        <div class="register-wrappper">
+            <h1>Create Your Character</h1>
+            <div class="register-input">
+                <label class="register-input__label">Character Name</label>
+                <input type="text" class="usernameInput"> 
+            </div>
+             <button id="create-character-button">
+                    Create Character
+            </button>
+            <script>
+            document.getElementById("create-character-button").addEventListener("click", () => {
+            const input = document.querySelector(".usernameInput");
+            const name = input.value.trim();
+            if (!name) {
+            alert("Введите имя!");
+            return;
+            }
+
+            localStorage.setItem("username", name);
+            window.location.href = "index.html";
+            });
+            </script>
+        </div>
+        </div>
+    </div>
+</body>
+</html>
