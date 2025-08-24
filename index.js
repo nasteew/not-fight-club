@@ -40,10 +40,10 @@ function navigate(page, callback, addToHistory = true) {
       });
   }
 
-  if (addToHistory) {
-    const url = page === "home" ? "/" : `/${page}`;
-    history.pushState({ page }, "", url);
-  }
+  // if (addToHistory) {
+  //   const url = page === "home" ? "/" : `/${page}`;
+  //   history.pushState({ page }, "", url);
+  // }
 }
 document.body.addEventListener("click", e => {
   if (e.target.closest(".header-nav a")) {
