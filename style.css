@@ -225,6 +225,10 @@ p {
 .account-changes{
     height: auto;
 }
+.wins-loses{
+    margin-top: 1rem;
+    font-size: 1.5rem;
+}
 .modal {
     display: none;
     position: fixed;
