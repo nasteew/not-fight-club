@@ -32,6 +32,20 @@ function navigate(page, callback, addToHistory = true) {
           if (savedName) {
           avatarName.textContent = savedName;
           }
+          const counterWinsText = document.getElementById("wins-count");
+          const counterLosesText = document.getElementById("loses-count");
+          
+          let counterWins = localStorage.getItem('counterWins');
+          if (counterWins === null) {
+          counterWins = 0;
+          }
+
+          let counterLoses = localStorage.getItem('counterLoses');
+          if (counterLoses === null) {
+          counterLoses = 0;
+          }
+          counterWinsText.textContent = `Wins: ${counterWins}`;
+          counterLosesText.textContent = `Loses: ${counterLoses}`;
         }
         if (callback) callback();
       })
@@ -40,10 +54,6 @@ function navigate(page, callback, addToHistory = true) {
       });
   }
 
-  // if (addToHistory) {
-  //   const url = page === "home" ? "/" : `/${page}`;
-  //   history.pushState({ page }, "", url);
-  // }
 }
 document.body.addEventListener("click", e => {
   if (e.target.closest(".header-nav a")) {
@@ -68,9 +78,9 @@ window.addEventListener("popstate", e => {
 let player;
 let enemy;
 const enemies = [
-  { name: "Spider", attackZones: 1, defenseZones: 2, health: 150, damage: 15, critChance: 0.1, critMultiplier: 1.5, img: "assets/rivals/rival1.jpg" },
+  { name: "Spider", attackZones: 1, defenseZones: 2, health: 150, damage: 20, critChance: 0.1, critMultiplier: 1.5, img: "assets/rivals/rival1.jpg" },
   { name: "Troll", attackZones: 1, defenseZones: 2, health: 150, damage: 20, critChance: 0.2, critMultiplier: 1.5, img: "assets/rivals/rival2.jpg" },
-  { name: "Dragon", attackZones: 1, defenseZones: 2, health: 150, damage: 18, critChance: 0.15, critMultiplier: 1.4, img: "assets/rivals/rival3.jpg" }
+  { name: "Dragon", attackZones: 1, defenseZones: 2, health: 150, damage: 25, critChance: 0.15, critMultiplier: 1.4, img: "assets/rivals/rival3.jpg" }
 ];
 function showEnemy() {
   const enemyNameSpan = content.querySelector(".rival-name");
@@ -118,10 +128,10 @@ function checkSelections() {
 
     if (!attackButton) return; // 
 
-    const attackSelected = Array.from(attackRadios).some(r => r.checked);
+    const attackSelected = Array.from(attackRadios).filter(r => r.checked).length;
     const defenseSelected = Array.from(defenseRadios).filter(r => r.checked).length;
 
-    attackButton.disabled = !(attackSelected && defenseSelected === 2);
+    attackButton.disabled = !(attackSelected === 1 && defenseSelected === 2);
 }
 
 content.addEventListener("click", e => {
@@ -216,6 +226,29 @@ content.addEventListener("click", e => {
         if (attackButton) attackButton.disabled = true;
 
         const winner = player.health > 0 ? player.name : enemy.name;
+
+        let counterWins = localStorage.getItem('counterWins');
+        if (counterWins === null) {
+        counterWins = 0;
+        } else {
+        counterWins = parseInt(counterWins, 10);
+        }
+
+        let counterLoses = localStorage.getItem('counterLoses');
+        if (counterLoses === null) {
+        counterLoses = 0;
+        } else {
+        counterLoses = parseInt(counterLoses, 10);
+        }
+
+        if(winner === player.name) {
+          counterWins += 1;
+          localStorage.setItem("counterWins", counterWins);
+        }
+        else{
+          counterLoses +=1
+          localStorage.setItem("counterLoses", counterLoses);
+        }
         const endLog = document.createElement("span");
         endLog.classList.add("battle-info-text");
         endLog.innerHTML = `<strong>Battle over!</strong> Winner: <strong>${winner}</strong>`;
